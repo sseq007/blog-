@@ -1,17 +1,28 @@
 package blog.service;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+import blog.config.DB;
 import blog.domain.user.User;
+import blog.domain.user.UserDao;
 import blog.domain.user.dto.JoinReqDto;
 import blog.domain.user.dto.LoginReqDto;
 import blog.domain.user.dto.UpdateReqDto;
 
 public class UserService {
 
+	private UserDao userDao;
 	
+	public UserService() {
+		userDao = new UserDao();
+	}
+
 	public int 회원가입(JoinReqDto dto) {
-		
-		return -1;
-		
+
+		int result = userDao.save(dto);
+		return result;
+
 	}
 	
 	public User 로그인(LoginReqDto dto) {
