@@ -8,8 +8,41 @@ import com.mysql.cj.CharsetSettings;
 
 import blog.config.DB;
 import blog.domain.user.dto.JoinReqDto;
+import blog.domain.user.dto.LoginReqDto;
 
 public class UserDao {
+	
+	public User findByUsernameAndPassword(LoginReqDto dto) {
+		
+		String sql = "SELECT id, username, email, address FROM user WHERE username = ? AND password = ?";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs = null;
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1,dto.getUsername());
+			pstmt.setString(2,dto.getPassword());
+			// executeUpdate -> INSERT OR UPDATE 경우
+			// executeQuery -> SELECT 시
+			rs = pstmt.executeQuery(); 
+			//Spring시 Persistence API
+			if(rs.next()) {	
+				User user = User.builder()
+						.id(rs.getInt("id"))
+						.username(rs.getString("username"))
+						.email(rs.getString("email"))
+						.address(rs.getString("address"))
+						.build();
+				return user;
+			}
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			DB.close(conn, pstmt, rs);
+		}
+		return null;
+	}
 
 	public int findByUsername(String username) { //유저네임 찾기
 		

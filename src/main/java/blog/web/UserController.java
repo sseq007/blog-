@@ -9,7 +9,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import blog.domain.user.User;
 import blog.domain.user.dto.JoinReqDto;
 import blog.domain.user.dto.LoginReqDto;
 import blog.service.UserService;
@@ -43,7 +45,7 @@ public class UserController extends HttpServlet {
 		UserService userService = new UserService();
 		
 		if(cmd.equals("loginForm")) {
-		response.sendRedirect("/user/loginForm.jsp");	
+		response.sendRedirect("user/loginForm.jsp");	
 
 		}else if (cmd.equals("login")) {
 			String username = request.getParameter("username");
@@ -51,7 +53,16 @@ public class UserController extends HttpServlet {
 			LoginReqDto dto = new LoginReqDto();
 			dto.setUsername(username);
 			dto.setPassword(password);
-			userService.로그인(dto);
+			User userEntity = userService.로그인(dto);
+			System.out.println(userEntity);
+			if(userEntity != null) {
+				HttpSession session = request.getSession();
+				session.setAttribute("principal", userEntity);
+				response.sendRedirect("index.jsp");
+			}
+			else {
+				Script.back(response, "로그인 실패");
+			}
 		}
 		else if (cmd.equals("joinForm")) {
 			response.sendRedirect("user/joinForm.jsp");
@@ -89,6 +100,11 @@ public class UserController extends HttpServlet {
 					out.print("fail");
 				}
 				out.flush();
+			}
+			else if (cmd.equals("logout")) {
+				HttpSession session = request.getSession();
+				session.invalidate();
+				response.sendRedirect("index.jsp");
 			}
 		
 	}
