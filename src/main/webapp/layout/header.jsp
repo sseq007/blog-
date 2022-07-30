@@ -12,6 +12,8 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 </head>
 <body>
 	<nav class="navbar navbar-expand-md bg-dark navbar-dark">
@@ -23,7 +25,7 @@
 			<c:when test="${sessionScope.principal != null }">
 				<div class="collapse navbar-collapse" id="collapsibleNavbar">
 					<ul class="navbar-nav">
-						<li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/blog?cmd=saveForm">글쓰기</a></li>
+						<li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/board?cmd=saveForm">글쓰기</a></li>
 						<li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/user?cmd=updateForm">회원정보</a></li>
 						<li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/user?cmd=logout">로그아웃</a></li>
 					</ul>

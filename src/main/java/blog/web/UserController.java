@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -45,6 +46,9 @@ public class UserController extends HttpServlet {
 		UserService userService = new UserService();
 		
 		if(cmd.equals("loginForm")) {
+			RequestDispatcher dis =
+					request.getRequestDispatcher("user/loginForm.jsp");
+				dis.forward(request,response);
 		response.sendRedirect("user/loginForm.jsp");	
 
 		}else if (cmd.equals("login")) {
@@ -58,6 +62,7 @@ public class UserController extends HttpServlet {
 			if(userEntity != null) {
 				HttpSession session = request.getSession();
 				session.setAttribute("principal", userEntity);
+				
 				response.sendRedirect("index.jsp");
 			}
 			else {
@@ -65,7 +70,10 @@ public class UserController extends HttpServlet {
 			}
 		}
 		else if (cmd.equals("joinForm")) {
-			response.sendRedirect("user/joinForm.jsp");
+			RequestDispatcher dis =
+					request.getRequestDispatcher("user/joinForm.jsp");
+				dis.forward(request,response);
+			
 		}
 		else if(cmd.equals("join")) {
 			String username = request.getParameter("username");
@@ -92,7 +100,7 @@ public class UserController extends HttpServlet {
 				String username = br.readLine();
 				int result =userService.유저네임중복체크(username);
 				PrintWriter out = response.getWriter();
-				System.out.println(result);
+				//System.out.println(result);
 				if(result ==1 ) {
 					out.print("ok");
 				}

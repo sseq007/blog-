@@ -1,11 +1,19 @@
 package blog.web;
 
 import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import blog.domain.board.dto.SaveReqDto;
+import blog.domain.user.User;
+import blog.service.BoardService;
+import blog.util.Script;
 
 @WebServlet("/board")
 public class BoardController extends HttpServlet {
@@ -30,6 +38,40 @@ public class BoardController extends HttpServlet {
 	
 	protected void doProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		String cmd = request.getParameter("cmd");
+		BoardService boardService = new BoardService();
+		HttpSession session = request.getSession();
+		if(cmd.equals("saveForm")) {
+			User principal = (User) session.getAttribute("principal");
+			if(principal != null) {
+				RequestDispatcher dis =
+						request.getRequestDispatcher("board/saveForm.jsp");
+					dis.forward(request,response);
+		}
+			else {
+				RequestDispatcher dis =
+						request.getRequestDispatcher("user/loginForm.jsp");
+					dis.forward(request,response);
+			}
+		}else if (cmd.equals("save")) { 
+			int userId =Integer.parseInt(request.getParameter("userId")); // 10진수 integer형으로 변한
+			String title = request.getParameter("title");
+			String content = request.getParameter("content");
+			
+			SaveReqDto dto = new SaveReqDto();
+			dto.setUserId(userId);
+			dto.setTitle(title);
+			dto.setContent(content);
+			int result = boardService.글쓰기(dto);
+			if(result ==1 ) {
+				response.sendRedirect("index.jsp");
+			}
+			else {
+				Script.back(response, "글쓰기 실패");
+			}
+				
+			
+		}
 	}
 
 
