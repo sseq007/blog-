@@ -4,6 +4,7 @@ import java.util.List;
 
 import blog.domain.board.Board;
 import blog.domain.board.BoardDao;
+import blog.domain.board.dto.DetailResDto;
 import blog.domain.board.dto.SaveReqDto;
 
 public class BoardService {
@@ -12,6 +13,16 @@ public class BoardService {
 	
 	public BoardService() {
 		boardDao = new BoardDao();
+	}
+	public DetailResDto 글상세보기(int id) {
+		
+		int result = boardDao.updateReadCount(id);
+		if(result==1) {
+			return boardDao.findById(id);	
+		}else {
+			return null;
+		}
+		
 	}
 	
 	public int 글쓰기(SaveReqDto dto) {

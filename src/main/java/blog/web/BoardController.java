@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import blog.domain.board.Board;
+import blog.domain.board.dto.DetailResDto;
 import blog.domain.board.dto.SaveReqDto;
 import blog.domain.user.User;
 import blog.service.BoardService;
@@ -83,7 +84,18 @@ public class BoardController extends HttpServlet {
 			RequestDispatcher dis =
 					request.getRequestDispatcher("board/list.jsp");
 				dis.forward(request,response);
-			
+		}else if(cmd.equals("detail")) {
+			int id = Integer.parseInt(request.getParameter("id"));
+			DetailResDto dto = boardService.글상세보기(id); //board테이블 + user테이블 = 조인된 데이터 필요
+			if(dto == null) {
+				Script.back(response, "상세보기에 실패하였습니다.");
+			}else {
+				request.setAttribute("dto", dto);
+				//System.out.println("DetailResDto : "+dto);
+				RequestDispatcher dis =
+						request.getRequestDispatcher("board/detail.jsp");
+					dis.forward(request,response);
+			}
 		}
 	}
 
