@@ -14,7 +14,25 @@ import blog.domain.board.dto.SaveReqDto;
 
 public class BoardDao {
 
-	public int updateReadCount(int id) { // 글쓰기
+public int deleteById(int id) { // 글삭제
+		
+		String sql = "DELETE FROM board WHERE id = ?";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt=null;
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			int result = pstmt.executeUpdate();
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			DB.close(conn, pstmt);
+		}
+		return -1;
+	}
+	public int updateReadCount(int id) { // 조회수 카운트(증가)
 
 		String sql = "UPDATE board SET readCount = readCount+1 WHERE id = ?";
 		Connection conn = DB.getConnection();
@@ -31,9 +49,10 @@ public class BoardDao {
 		}
 		return -1;
 	}
-	public DetailResDto findById(int id){
+	
+	public DetailResDto findById(int id){ //상세보기
 		StringBuffer sb = new StringBuffer();
-		sb.append("select b.id, b.title, b.content, b.readCount, u.username ");
+		sb.append("select b.id, b.title, b.content, b.readCount, b.userId, u.username ");
 		sb.append("from board b inner join user u ");
 		sb.append("on b.userId = u.id ");
 		sb.append("where b.id = ?");
@@ -55,6 +74,7 @@ public class BoardDao {
 				dto.setTitle(rs.getString("b.title"));
 				dto.setContent(rs.getString("b.content"));
 				dto.setReadCount(rs.getInt("b.readCount"));
+				dto.setUserId(rs.getInt("b.userId"));
 				dto.setUsername(rs.getString("u.username"));
 				return dto;
 			}
@@ -67,7 +87,7 @@ public class BoardDao {
 		return null;
 	}
 	
-	public int count() {
+	public int count() { // 글 목록 페이징 개수
 		String sql = "SELECT count(*) FROM board"; // 전체 행 갯수 가져오기 count함수
 		Connection conn = DB.getConnection();
 		PreparedStatement pstmt=null;
@@ -89,7 +109,7 @@ public class BoardDao {
 		return -1;
 	}
 	
-	public List<Board> findAll(int page){
+	public List<Board> findAll(int page){ // 글 목록 보기
 		String sql = "SELECT * FROM board ORDER BY id DESC LIMIT ?, 4";
 		Connection conn = DB.getConnection();
 		PreparedStatement pstmt=null;

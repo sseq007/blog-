@@ -5,7 +5,38 @@
 
 
 <div class="container">
-	<br /> <br />
+	<c:if test="${sessionScope.principal.id == dto.userId}">
+		<button onClick="deleteById(${dto.id})" class = "btn btn-danger">삭제</button>
+	</c:if>
+
+	<script>
+		function deleteById(boardId){
+			
+			var data ={
+					boardId: boardId
+			}
+			
+			$.ajax({
+				type: "post",
+				url: "/blog/board?cmd=delete",
+				data : JSON.stringify(data),
+				contentType: "application/json; charset=utf-8",
+				dataType: "json"
+			}).done(function(result){
+				if(result.status == "ok"){
+					alert("삭제되었습니다");
+					location.href ="index.jsp";
+				}else{
+					alert("삭제에 실패하였습니다");
+				}
+			});
+		}
+	
+	
+	</script>
+	<br /> 
+	<br />
+	
 	<h6 class="m-2">
 		작성자 : <i>${dto.username}</i> 조회수 : <i>${dto.readCount}</i>
 	</h6>

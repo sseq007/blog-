@@ -58,7 +58,7 @@ public class UserController extends HttpServlet {
 			dto.setUsername(username);
 			dto.setPassword(password);
 			User userEntity = userService.로그인(dto);
-			System.out.println(userEntity);
+			//System.out.println(userEntity);
 			if(userEntity != null) {
 				HttpSession session = request.getSession();
 				session.setAttribute("principal", userEntity);

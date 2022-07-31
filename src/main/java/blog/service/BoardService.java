@@ -14,6 +14,11 @@ public class BoardService {
 	public BoardService() {
 		boardDao = new BoardDao();
 	}
+	
+	public int 글삭제 (int id) {
+		return boardDao.deleteById(id);
+	}
+	
 	public DetailResDto 글상세보기(int id) {
 		
 		int result = boardDao.updateReadCount(id);
