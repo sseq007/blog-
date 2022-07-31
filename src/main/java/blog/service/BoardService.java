@@ -6,6 +6,7 @@ import blog.domain.board.Board;
 import blog.domain.board.BoardDao;
 import blog.domain.board.dto.DetailResDto;
 import blog.domain.board.dto.SaveReqDto;
+import blog.domain.board.dto.UpdateReqDto;
 
 public class BoardService {
 
@@ -13,6 +14,10 @@ public class BoardService {
 	
 	public BoardService() {
 		boardDao = new BoardDao();
+	}
+	
+	public int 글수정(UpdateReqDto dto) {
+		return boardDao.update(dto);
 	}
 	
 	public int 글삭제 (int id) {

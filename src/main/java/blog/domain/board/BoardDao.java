@@ -9,29 +9,49 @@ import java.util.List;
 import blog.config.DB;
 import blog.domain.board.dto.DetailResDto;
 import blog.domain.board.dto.SaveReqDto;
-
-
+import blog.domain.board.dto.UpdateReqDto;
 
 public class BoardDao {
 
-public int deleteById(int id) { // 글삭제
-		
+	public int update(UpdateReqDto dto) { // 조회수 카운트(증가)
+
+		String sql = "UPDATE board SET title = ?, content = ? WHERE id = ?";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getTitle());
+			pstmt.setString(2, dto.getContent());
+			pstmt.setInt(3, dto.getId());
+			int result = pstmt.executeUpdate();
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DB.close(conn, pstmt);
+		}
+		return -1;
+	}
+
+	public int deleteById(int id) { // 글삭제
+
 		String sql = "DELETE FROM board WHERE id = ?";
 		Connection conn = DB.getConnection();
-		PreparedStatement pstmt=null;
-		
+		PreparedStatement pstmt = null;
+
 		try {
-			pstmt=conn.prepareStatement(sql);
+			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, id);
 			int result = pstmt.executeUpdate();
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			DB.close(conn, pstmt);
 		}
 		return -1;
 	}
+
 	public int updateReadCount(int id) { // 조회수 카운트(증가)
 
 		String sql = "UPDATE board SET readCount = readCount+1 WHERE id = ?";

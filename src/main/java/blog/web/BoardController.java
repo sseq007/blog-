@@ -20,6 +20,7 @@ import blog.domain.board.dto.DeleteReqDto;
 import blog.domain.board.dto.DeleteRespDto;
 import blog.domain.board.dto.DetailResDto;
 import blog.domain.board.dto.SaveReqDto;
+import blog.domain.board.dto.UpdateReqDto;
 import blog.domain.user.User;
 import blog.service.BoardService;
 import blog.util.Script;
@@ -118,12 +119,35 @@ public class BoardController extends HttpServlet {
 				respDto.setStatus("fail");
 			}
 			String respData = gson.toJson(respDto);
-			System.out.println(respDto);
+			//System.out.println(respDto);
 			PrintWriter out = response.getWriter();
 			out.print(respData);
 			out.flush();
+		}else if (cmd.equals("updateForm")) {
+			int id = Integer.parseInt(request.getParameter("id"));
+			DetailResDto dto = boardService.글상세보기(id);
+			request.setAttribute("dto", dto);
+			RequestDispatcher dis =
+					request.getRequestDispatcher("board/updateForm.jsp");
+				dis.forward(request,response);
+		}else if (cmd.equals("update")) {
+			int id = Integer.parseInt(request.getParameter("id")); // 10진수 integer형으로 변한
+			String title = request.getParameter("title");
+			String content = request.getParameter("content");
+			
+			UpdateReqDto dto = new UpdateReqDto();
+			dto.setId(id);
+			dto.setTitle(title);
+			dto.setContent(content);
+			
+			int result = boardService.글수정(dto);
+			System.out.println(result);
+			if(result == 1) {
+				response.sendRedirect("/blog/board?cmd=detail&id="+id);
+			}else {
+				Script.back(response, "글 수정에 실패하였습니다");
+			}
 		}
-		
 	}
 
 }
