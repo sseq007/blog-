@@ -17,20 +17,37 @@
 	</div>
 
 	<div class="progress col-md-12 m-2">
-		<div class="progress-bar" style="width: 70%"></div>
+		<div class="progress-bar" style="width: ${currentPosition}%"></div>
 	</div>
-
+	
+	<c:forEach var="board" items="${boards}">
 		<div class="card col-md-12 m-2">
 			<div class="card-body">
-				<h4 class="card-title">제목</h4>
-				<a href="#" class="btn btn-primary">상세보기</a>
+				<h4 class="card-title">${board.title}</h4>
+				<a href="/blog/board?cmd=detail&id=${board.id}" class="btn btn-primary">상세보기</a>
 			</div>
 		</div>
-
+	</c:forEach>
 	<br />
+
 	<ul class="pagination justify-content-center">
-		<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-		<li class="page-item"><a class="page-link" href="#">Next</a></li>
+		<c:choose>
+			<c:when test="${param.page==0}">
+				<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+			</c:when>
+			<c:otherwise>
+				<li class="page-item"><a class="page-link" href="/blog/board?cmd=list&page=${param.page-1}">Previous</a></li>
+			</c:otherwise>
+		</c:choose>
+
+		<c:choose>
+			<c:when test="${lastPage == param.page}">
+				<li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+			</c:when>
+			<c:otherwise>
+				<li class="page-item"><a class="page-link" href="/blog/board?cmd=list&page=${param.page+1}">Next</a></li>
+			</c:otherwise>
+		</c:choose>
 	</ul>
 </div>
 

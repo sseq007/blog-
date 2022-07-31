@@ -20,4 +20,9 @@ public class Board {
 	private String content;
 	private int readCount;
 	private Timestamp createDate;
+	
+	//루시 필터 적용할수 있다
+	public String getTitle() {
+		return title.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+	}
 }

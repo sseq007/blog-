@@ -3,6 +3,6 @@
 
 <% 
 	RequestDispatcher dis =
-		request.getRequestDispatcher("board/list.jsp");
+		request.getRequestDispatcher("board?cmd=list&page=0");
 	dis.forward(request,response);
 %>
