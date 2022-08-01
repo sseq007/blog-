@@ -10,31 +10,7 @@
 		<button onClick="deleteById(${dto.id})" class = "btn btn-danger">삭제</button>
 	</c:if>
 
-	<script>
-		function deleteById(boardId){
-			
-			var data ={
-					boardId: boardId
-			}
-			
-			$.ajax({
-				type: "post",
-				url: "/blog/board?cmd=delete",
-				data : JSON.stringify(data),
-				contentType: "application/json; charset=utf-8",
-				dataType: "json"
-			}).done(function(result){
-				if(result.status == "ok"){
-					alert("삭제되었습니다");
-					location.href ="index.jsp";
-				}else{
-					alert("삭제에 실패하였습니다");
-				}
-			});
-		}
-	
-	
-	</script>
+
 	<br /> 
 	<br />
 	
@@ -50,7 +26,7 @@
 		<div class="m-2">${dto.content}</div>
 	</div>
 	<hr />
-	
+
 	<!-- 댓글 박스 -->
 	<div class="row bootstrap snippets">
 		<div class="col-md-12">
@@ -60,9 +36,18 @@
 						<b>Comment</b>
 					</div>
 					<div class="panel-body">
-						<textarea id="reply__write__form" class="form-control" placeholder="write a comment..." rows="2"></textarea>
-						<br>
-						<button onclick="#" class="btn btn-primary pull-right">댓글쓰기</button>
+						<form action="/blog/reply?cmd=save" method="post">
+							<input type="hidden" name="userId" value="${sessionScope.principal.id}"/>
+							<input type="hidden" name="boardId" value="${dto.id}"/>
+							<textarea name="content" id="reply__write__form" class="form-control" placeholder="write a comment..." rows="2"></textarea>
+							<br>
+							<button onclick="#" class="btn btn-primary pull-right">댓글쓰기</button>
+						</form>
+						
+						<script>
+						
+						
+						</script>
 						<div class="clearfix"></div>
 						<hr />
 
@@ -92,6 +77,26 @@
 	</div>
 	<!-- 댓글 박스 끝 -->
 </div>
+
+	<script>
+		function deleteById(boardId){
+			
+			$.ajax({
+				type: "post",
+				url: "/blog/board?cmd=delete&id="+boardId,
+				dataType: "json"
+			}).done(function(result){
+				if(result.statusCode == "1"){
+					alert("삭제되었습니다");
+					location.href ="index.jsp";
+				}else{
+					alert("삭제에 실패하였습니다");
+				}
+			});
+		}
+	
+	
+	</script>
 </body>
 </html>
 

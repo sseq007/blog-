@@ -24,6 +24,7 @@ public class BoardDao {
 			pstmt.setString(2, dto.getContent());
 			pstmt.setInt(3, dto.getId());
 			int result = pstmt.executeUpdate();
+			
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();

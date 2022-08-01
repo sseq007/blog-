@@ -16,8 +16,7 @@ import javax.servlet.http.HttpSession;
 import com.google.gson.Gson;
 
 import blog.domain.board.Board;
-import blog.domain.board.dto.DeleteReqDto;
-import blog.domain.board.dto.DeleteRespDto;
+import blog.domain.board.dto.CommonRespDto;
 import blog.domain.board.dto.DetailResDto;
 import blog.domain.board.dto.SaveReqDto;
 import blog.domain.board.dto.UpdateReqDto;
@@ -104,21 +103,15 @@ public class BoardController extends HttpServlet {
 					dis.forward(request,response);
 			}
 		}else if(cmd.equals("delete")) {
-			BufferedReader br = request.getReader();
-			String data = br.readLine();
-			 
+			int id = Integer.parseInt(request.getParameter("id"));
 			Gson gson = new Gson();
-			DeleteReqDto dto = gson.fromJson(data, DeleteReqDto.class);
 			//System.out.println(data);
-			DeleteRespDto respDto = new DeleteRespDto();
-			int result = boardService.글삭제(dto.getBoardId());
+			CommonRespDto<String> commonRespDto = new CommonRespDto<>();
+			int result = boardService.글삭제(id);
+			commonRespDto.setStatusCode(result);
+			commonRespDto.setData("성공");
+			String respData = gson.toJson(commonRespDto);
 			
-			if(result == 1) {
-				respDto.setStatus("ok");
-			}else {
-				respDto.setStatus("fail");
-			}
-			String respData = gson.toJson(respDto);
 			//System.out.println(respDto);
 			PrintWriter out = response.getWriter();
 			out.print(respData);
